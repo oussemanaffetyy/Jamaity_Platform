@@ -1,0 +1,23 @@
+# Environnement virtuel
+venv/
+.venv/
+
+# Fichiers cache de Python
+__pycache__/
+*.pyc
+
+# Fichiers de configuration des éditeurs
+.vscode/
+.idea/
+.DS_Store
+
+# Dossier de données (bonne pratique pour ne pas versionner les données)
+# Si votre fichier de données est petit, vous pouvez retirer la ligne suivante.
+# Sinon, expliquez dans le README comment l'obtenir.
+data/
+
+# Dossiers d'instance et de build
+instance/
+build/
+dist/
+*.egg-info/

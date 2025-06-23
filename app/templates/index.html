@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recommandations de Projets</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <h1>🎯 Recommandations d'appels à projets</h1>
+    <form method="GET" action="/">
+        <div class="filtres">
+            <div>
+                <label for="region">Région</label><br>
+                <select name="region" id="region" onchange="this.form.submit()">
+                    {% for r in regions %}
+                    <option value="{{ r }}" {% if r == selected_region %}selected{% endif %}>{{ r }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div>
+                <label for="thematique">Domaine</label><br>
+                <select name="thematique" id="thematique" onchange="this.form.submit()">
+                    {% for t in thematiques %}
+                    <option value="{{ t }}" {% if t == selected_thematique %}selected{% endif %}>{{ t }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+    </form>
+    <h3>🔎 {{ nombre_projets }} appels à projets trouvés</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Nom de l'appel</th>
+                <th>Date limite</th>
+                <th>Détails</th>
+                <th>Score de pertinence</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for projet in projets %}
+            <tr>
+                <td>{{ projet.Nom_appel }}</td>
+                <td>{{ projet.Date_limite }}</td>
+                <td><a href="{{ projet.Lien_details }}" target="_blank">Voir le lien</a></td>
+                
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="4" style="text-align: center;">Aucun projet trouvé pour cette sélection.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
