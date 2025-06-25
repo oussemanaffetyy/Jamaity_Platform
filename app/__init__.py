@@ -1,24 +1,27 @@
+# app/__init__.py
 from flask import Flask
 import pandas as pd
 import os
 
 def create_app():
-    # Crée l'instance de l'application Flask
     app = Flask(__name__)
 
-    # Chemin absolu vers le fichier de données pour éviter les erreurs
-    data_path = os.path.join(os.path.dirname(app.root_path), 'data', 'recommandations_BERT_final.xlsx')
+    # On charge le seul fichier de données nécessaire
+    data_file = os.path.join(os.path.dirname(app.root_path), 'data', 'recommandations_BERT_final.xlsx')
 
     try:
-        # Charger les données une seule fois au démarrage
-        df = pd.read_excel(data_path)
-        # Stocker le dataframe dans la configuration de l'app pour y accéder partout
+        df = pd.read_excel(data_file)
         app.config['PROJECT_DF'] = df
-    except FileNotFoundError:
-        print(f"ERREUR : Fichier de données introuvable. Vérifiez le chemin : {data_path}")
-        app.config['PROJECT_DF'] = None
+        print(f"✅ Fichier {data_file} chargé avec succès.")
 
-    # Importer et enregistrer les routes définies dans routes.py
+    except FileNotFoundError:
+        app.config['PROJECT_DF'] = None
+        print(f"!!! ERREUR CRITIQUE : Le fichier {data_file} est introuvable.")
+    except Exception as e:
+        app.config['PROJECT_DF'] = None
+        print(f"!!! ERREUR CRITIQUE LORS DU CHARGEMENT : {e}")
+
+    # Importer et enregistrer les routes
     with app.app_context():
         from . import routes
         app.register_blueprint(routes.main_bp)

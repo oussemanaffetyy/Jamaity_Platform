@@ -1,57 +1,150 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html data-bs-theme="light" lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Recommandations de Projets</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Jamaity - Opportunités</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='assets/bootstrap/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800&amp;display=swap">
+    <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/bss-overrides.css') }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+
 </head>
 <body>
-    <h1>🎯 Recommandations d'appels à projets</h1>
-    <form method="GET" action="/">
-        <div class="filtres">
-            <div>
-                <label for="region">Région</label><br>
-                <select name="region" id="region" onchange="this.form.submit()">
-                    {% for r in regions %}
-                    <option value="{{ r }}" {% if r == selected_region %}selected{% endif %}>{{ r }}</option>
-                    {% endfor %}
-                </select>
+<nav class="navbar navbar-expand-lg bg-white py-3 shadow-sm">
+  <div class="container">
+    <!-- Logo -->
+    <a class="navbar-brand me-4" href="/">
+      <img src="{{ url_for('static', filename='assets/images/logo.png') }}" alt="Jamaity Logo" height="40">
+    </a>
+
+    <!-- Responsive button -->
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <!-- Main navbar content -->
+    <div class="collapse navbar-collapse justify-content-between" id="navbarNav">
+      
+      <!-- Centered menu items -->
+      <ul class="navbar-nav mx-auto gap-3">
+        <li class="nav-item"><a class="nav-link fw-semibold text-dark" href="#">OPPORTUNITIES</a></li>
+        <li class="nav-item"><a class="nav-link fw-semibold text-dark" href="#">ACTUALITÉS</a></li>
+        <li class="nav-item"><a class="nav-link fw-semibold text-dark" href="#">MAPS</a></li>
+        <li class="nav-item"><a class="nav-link fw-semibold text-dark" href="#">EXPERTS</a></li>
+      </ul>
+
+      <!-- Language & login buttons -->
+      <div class="d-flex align-items-center gap-2">
+        <button class="btn btn-outline-pink fw-bold border-2 text-pink" style="border-color:#FF99DC;">AR</button>
+        <button class="btn fw-bold text-white" style="background-color:#3D57A2;">FR</button>
+        <a href="#" class="btn text-white fw-bold px-4 py-2" style="background-color:#3D57A2; border-radius: 30px;">
+          SE CONNECTER
+        </a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+
+
+    <section class="mb-5 py-5">
+  <div class="container">
+    <div class="text-center mb-5">
+      <h1 class="fw-bold" style="color: #3D57A2;">
+        Association
+        <div style="height: 4px; width: 120px; background-color: #FF99DC; margin: 0 auto; border-radius: 2px;"></div>
+      </h1>
+    </div>
+
+    <div class="row justify-content-center">
+      <div class="col-lg-10 col-xl-9">
+        <form method="GET" action="/" id="filter-form" class="bg-light p-4 rounded shadow-sm">
+          <div class="mb-4">
+            <label for="search_name" class="form-label fw-semibold">Rechercher</label>
+            <input type="text" class="form-control form-control-lg" name="search_name" id="search_name"
+              placeholder="Commencez à taper un nom..." value="{{ selected_name }}">
+          </div>
+
+          <div class="row g-4 mb-4">
+            <div class="col-md-6">
+              <label for="region" class="form-label fw-semibold">Région</label>
+              <select name="region" id="region" class="form-select form-select-lg">
+                <option value="">Toutes les régions</option>
+                {% for r in regions %}
+                  <option value="{{ r }}" {% if r == selected_region %}selected{% endif %}>{{ r }}</option>
+                {% endfor %}
+              </select>
             </div>
-            <div>
-                <label for="thematique">Domaine</label><br>
-                <select name="thematique" id="thematique" onchange="this.form.submit()">
-                    {% for t in thematiques %}
-                    <option value="{{ t }}" {% if t == selected_thematique %}selected{% endif %}>{{ t }}</option>
-                    {% endfor %}
-                </select>
+            <div class="col-md-6">
+              <label for="thematique" class="form-label fw-semibold">Domaine</label>
+              <select name="thematique" id="thematique" class="form-select form-select-lg">
+                <option value="">Tous les domaines</option>
+                {% for t in thematiques %}
+                  <option value="{{ t }}" {% if t == selected_thematique %}selected{% endif %}>{{ t }}</option>
+                {% endfor %}
+              </select>
             </div>
-        </div>
-    </form>
-    <h3>🔎 {{ nombre_projets }} appels à projets trouvés</h3>
-    <table>
-        <thead>
-            <tr>
-                <th>Nom de l'appel</th>
-                <th>Date limite</th>
-                <th>Détails</th>
-                <th>Score de pertinence</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for projet in projets %}
-            <tr>
-                <td>{{ projet.Nom_appel }}</td>
-                <td>{{ projet.Date_limite }}</td>
-                <td><a href="{{ projet.Lien_details }}" target="_blank">Voir le lien</a></td>
-                
-            </tr>
+          </div>
+
+          <div class="d-flex justify-content-end gap-3">
+            <button class="btn text-white fw-semibold" type="submit" style="background-color:#3D57A2; border-radius: 30px;">
+              Filtrer
+            </button>
+            <a href="/" class="btn fw-semibold" style="border: 2px solid #FF99DC; color: #FF99DC; border-radius: 30px;">
+              Effacer
+            </a>
+          </div>
+        </form>
+
+        <!-- Résultats -->
+<!-- Résultats -->
+<div class="mt-5">
+  <h5>
+    <span class="badge rounded-pill fs-6 text-white" style="background-color: #3D57A2;">
+      {{ nombre_projets }}
+    </span> résultats trouvés
+  </h5>
+
+  <div class="row mt-4">
+    {% for projet in projets %}
+      <div class="col-12 mb-4">
+        <div class="p-4 bg-white rounded shadow-sm">
+          <h5 class="fw-bold mb-2" style="color: #3D57A2;">{{ projet.Nom_appel or 'Appel sans titre' }}</h5>
+          <p class="text-muted">
+            {% if projet.thematique %}
+              {{ projet.thematique | capitalize }}
             {% else %}
-            <tr>
-                <td colspan="4" style="text-align: center;">Aucun projet trouvé pour cette sélection.</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+              Thématique non spécifiée
+            {% endif %}
+            - {{ projet.Association }}
+          </p>
+          <p class="mb-2">
+            <i class="bi bi-calendar-event"></i>
+            <strong>Date limite :</strong> {{ projet.Date_limite or 'Non spécifiée' }}
+          </p>
+          <div class="mb-3">
+            <span class="badge bg-secondary me-2">{{ projet.thematique or 'Sans domaine' }}</span>
+            <span class="badge bg-secondary">{{ projet.region or 'Région inconnue' }}</span>
+          </div>
+       {% if projet['Lien_details'] %}
+    <a href="{{ projet['Lien_details'] }}" target="_blank" class="btn btn-dark mt-2">Plus de détails</a>
+{% endif %}
+        </div>
+      </div>
+    {% else %}
+      <p class="text-center mt-4">Aucun projet trouvé.</p>
+    {% endfor %}
+  </div>
+</div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+    <footer class="text-center bg-body-tertiary"></footer>
+    <script src="{{ url_for('static', filename='assets/bootstrap/js/bootstrap.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='assets/js/template.js') }}"></script>
 </body>
 </html>
