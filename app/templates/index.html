@@ -1,150 +1,348 @@
-<!DOCTYPE html>
-<html data-bs-theme="light" lang="fr">
-<head>
+  <!DOCTYPE html>
+  <html data-bs-theme="light" lang="fr">
+  <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
     <title>Jamaity - Opportunités</title>
+
+    <link rel="icon" href="{{ url_for('static', filename='assets/images/tn.svg') }}" type="image/svg+xml" >
     <link rel="stylesheet" href="{{ url_for('static', filename='assets/bootstrap/css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800&amp;display=swap">
     <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/bss-overrides.css') }}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <style>
+    #suggestions {
+  position: absolute;
+  z-index: 1000;
+  width: 100%;
+  max-height: 300px;
+  overflow-y: auto;
+}
 
-</head>
-<body>
-<nav class="navbar navbar-expand-lg bg-white py-3 shadow-sm">
-  <div class="container">
-    <!-- Logo -->
-    <a class="navbar-brand me-4" href="/">
-      <img src="{{ url_for('static', filename='assets/images/logo.png') }}" alt="Jamaity Logo" height="40">
-    </a>
+      /* Animation lien de la navbar */
+  .navbar-nav .nav-link {
+    position: relative;
+    transition: color 0.3s ease;
+  }
 
-    <!-- Responsive button -->
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-      <span class="navbar-toggler-icon"></span>
-    </button>
+  .navbar-nav .nav-link::after {
+    content: "";
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 0%;
+    height: 2px;
+    background-color: #3D57A2;
+    transition: width 0.3s ease;
+  }
 
-    <!-- Main navbar content -->
-    <div class="collapse navbar-collapse justify-content-between" id="navbarNav">
-      
-      <!-- Centered menu items -->
-      <ul class="navbar-nav mx-auto gap-3">
-        <li class="nav-item"><a class="nav-link fw-semibold text-dark" href="#">OPPORTUNITIES</a></li>
-        <li class="nav-item"><a class="nav-link fw-semibold text-dark" href="#">ACTUALITÉS</a></li>
-        <li class="nav-item"><a class="nav-link fw-semibold text-dark" href="#">MAPS</a></li>
-        <li class="nav-item"><a class="nav-link fw-semibold text-dark" href="#">EXPERTS</a></li>
-      </ul>
+  .navbar-nav .nav-link:hover::after {
+    width: 100%;
+  }
 
-      <!-- Language & login buttons -->
-      <div class="d-flex align-items-center gap-2">
-        <button class="btn btn-outline-pink fw-bold border-2 text-pink" style="border-color:#FF99DC;">AR</button>
-        <button class="btn fw-bold text-white" style="background-color:#3D57A2;">FR</button>
-        <a href="#" class="btn text-white fw-bold px-4 py-2" style="background-color:#3D57A2; border-radius: 30px;">
-          SE CONNECTER
-        </a>
-      </div>
-    </div>
-  </div>
-</nav>
+  .navbar-nav .nav-link:hover {
+    color: #3D57A2 !important;
+  }
+
+  /* Boutons animation hover */
+  .btn-hover-animate {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .btn-hover-animate:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+  }
+  /* Effet hover général pour tous les boutons personnalisés */
+        .btn-hover-animate {
+          transition: all 0.3s ease-in-out;
+          transform: translateY(0);
+        }
+
+        .btn-hover-animate:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Bouton Filtrer : hover = couleur plus claire */
+        .btn-filtrer {
+          background-color: #3D57A2;
+          border-radius: 30px;
+          color: white;
+        }
+
+        .btn-filtrer:hover {
+          background-color: #536fb7;
+        }
+
+        /* Bouton Effacer : hover = fond rose clair */
+        .btn-effacer {
+          border: 2px solid #FF99DC;
+          color: #FF99DC;
+          border-radius: 30px;
+          background-color: transparent;
+        }
+
+        .btn-effacer:hover {
+          background-color: #ffecf7;
+          color: #d94fa4;
+        }
+
+        /* Bouton SE CONNECTER : hover = plus clair */
+        .btn-connecter {
+          background-color: #3D57A2;
+          border-radius: 30px;
+          color: white;
+          transition: all 0.3s ease-in-out;
+        }
+
+        .btn-connecter:hover {
+          background-color: #536fb7;
+          color: #fff;
+          transform: translateY(-1px);
+          box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+    </style>
 
 
+  </head>
+  <body>
 
-    <section class="mb-5 py-5">
-  <div class="container">
-    <div class="text-center mb-5">
-      <h1 class="fw-bold" style="color: #3D57A2;">
-        Association
-        <div style="height: 4px; width: 120px; background-color: #FF99DC; margin: 0 auto; border-radius: 2px;"></div>
-      </h1>
-    </div>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg bg-white py-3 shadow-sm">
+    <div class="container">
+      <a class="navbar-brand me-4" href="https://jamaity.net/">
+        <img src="{{ url_for('static', filename='assets/images/logo.png') }}" alt="Jamaity Logo" height="40">
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse justify-content-between" id="navbarNav">
+          <ul class="navbar-nav mx-auto gap-3">
+            <li class="nav-item"><a class="nav-link fw-semibold text-dark" href="#">OPPORTUNITIES</a></li>
+            <li class="nav-item"><a class="nav-link fw-semibold text-dark" href="https://jamaity.net/actualites">ACTUALITÉS</a></li>
+            <li class="nav-item"><a class="nav-link fw-semibold text-dark" href="https://jamaity.net/maps">MAPS</a></li>
+            <li class="nav-item"><a class="nav-link fw-semibold text-dark" href="https://jamaity.net/experts">EXPERTS</a></li>
+          </ul>
 
-    <div class="row justify-content-center">
-      <div class="col-lg-10 col-xl-9">
-        <form method="GET" action="/" id="filter-form" class="bg-light p-4 rounded shadow-sm">
-          <div class="mb-4">
-            <label for="search_name" class="form-label fw-semibold">Rechercher</label>
-            <input type="text" class="form-control form-control-lg" name="search_name" id="search_name"
-              placeholder="Commencez à taper un nom..." value="{{ selected_name }}">
-          </div>
+        <div class="d-flex align-items-center gap-2">
+          <a href="https://jamaity.net/login" class="btn btn-connecter fw-bold px-4 py-2">
+            SE CONNECTER
+          </a>
 
-          <div class="row g-4 mb-4">
-            <div class="col-md-6">
-              <label for="region" class="form-label fw-semibold">Région</label>
-              <select name="region" id="region" class="form-select form-select-lg">
-                <option value="">Toutes les régions</option>
-                {% for r in regions %}
-                  <option value="{{ r }}" {% if r == selected_region %}selected{% endif %}>{{ r }}</option>
-                {% endfor %}
-              </select>
-            </div>
-            <div class="col-md-6">
-              <label for="thematique" class="form-label fw-semibold">Domaine</label>
-              <select name="thematique" id="thematique" class="form-select form-select-lg">
-                <option value="">Tous les domaines</option>
-                {% for t in thematiques %}
-                  <option value="{{ t }}" {% if t == selected_thematique %}selected{% endif %}>{{ t }}</option>
-                {% endfor %}
-              </select>
-            </div>
-          </div>
-
-          <div class="d-flex justify-content-end gap-3">
-            <button class="btn text-white fw-semibold" type="submit" style="background-color:#3D57A2; border-radius: 30px;">
-              Filtrer
-            </button>
-            <a href="/" class="btn fw-semibold" style="border: 2px solid #FF99DC; color: #FF99DC; border-radius: 30px;">
-              Effacer
-            </a>
-          </div>
-        </form>
-
-        <!-- Résultats -->
-<!-- Résultats -->
-<div class="mt-5">
-  <h5>
-    <span class="badge rounded-pill fs-6 text-white" style="background-color: #3D57A2;">
-      {{ nombre_projets }}
-    </span> résultats trouvés
-  </h5>
-
-  <div class="row mt-4">
-    {% for projet in projets %}
-      <div class="col-12 mb-4">
-        <div class="p-4 bg-white rounded shadow-sm">
-          <h5 class="fw-bold mb-2" style="color: #3D57A2;">{{ projet.Nom_appel or 'Appel sans titre' }}</h5>
-          <p class="text-muted">
-            {% if projet.thematique %}
-              {{ projet.thematique | capitalize }}
-            {% else %}
-              Thématique non spécifiée
-            {% endif %}
-            - {{ projet.Association }}
-          </p>
-          <p class="mb-2">
-            <i class="bi bi-calendar-event"></i>
-            <strong>Date limite :</strong> {{ projet.Date_limite or 'Non spécifiée' }}
-          </p>
-          <div class="mb-3">
-            <span class="badge bg-secondary me-2">{{ projet.thematique or 'Sans domaine' }}</span>
-            <span class="badge bg-secondary">{{ projet.region or 'Région inconnue' }}</span>
-          </div>
-       {% if projet['Lien_details'] %}
-    <a href="{{ projet['Lien_details'] }}" target="_blank" class="btn btn-dark mt-2">Plus de détails</a>
-{% endif %}
         </div>
       </div>
-    {% else %}
-      <p class="text-center mt-4">Aucun projet trouvé.</p>
-    {% endfor %}
-  </div>
-</div>
+    </div>
+  </nav>
 
+  <!-- Section Formulaire -->
+  <section class="mb-5 py-5">
+    <div class="container">
+      <div class="text-center mb-5">
+      <div class="mb-4">
+                              <h1><strong><span style="color: rgb(61, 87, 162);">Associations</span></strong></h1>
+                              <hr>
+                          </div>
+                          <p class="lead fs-6"><span style="color: rgba(33, 37, 41, 0.75);">Découvrez les opportunités disponibles pour la société civile tunisienne</span></p>
+                      </div>
+
+      <div class="row justify-content-center">
+        <div class="col-lg-10 col-xl-9">
+          <form method="GET" action="/" id="filter-form" class="bg-light p-4 rounded shadow-sm">
+            
+            <!-- Message d'erreur -->
+            <div id="alert-message" class="alert alert-danger d-none" role="alert">
+              Veuillez remplir au moins un champ : Nom, Région ou Domaine.
+            </div>
+
+            <!-- Champ nom -->
+            <div class="mb-4">
+              <label for="search_name" class="form-label fw-semibold">Rechercher</label>
+              <input type="text" class="form-control form-control-lg" name="search_name" id="search_name"
+                placeholder="Commencez à taper un nom..." value="{{ selected_name }}">
+                <ul id="suggestions" class="list-group mt-2 d-none"></ul>
+
+            </div>
+
+            <!-- Région et Thématique -->
+            <div class="row g-4 mb-4">
+              <div class="col-md-6">
+                <label for="region" class="form-label fw-semibold">Région</label>
+                <select name="region" class="form-select">
+                  <option disabled {{ 'selected' if not selected_region }}>Veuillez sélectionner une région</option>
+                  {% for region in regions %}
+                    <option value="{{ region }}" {{ 'selected' if selected_region == region }}>{{ region }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+
+              <div class="col-md-6">
+                <label for="thematique" class="form-label fw-semibold">Domaine</label>
+                <select name="thematique" class="form-select">
+                  <option disabled {{ 'selected' if not selected_thematique }}>Veuillez sélectionner un domaine</option>
+                  {% for domaine in thematiques %}
+                    <option value="{{ domaine }}" {{ 'selected' if selected_thematique == domaine }}>{{ domaine }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+            </div>
+
+            <!-- Boutons -->
+            <div class="d-flex justify-content-end gap-3">
+            <button class="btn text-white fw-semibold btn-hover-animate" type="submit" style="background-color:#3D57A2; border-radius: 30px;">
+                Filtrer
+              </button>
+              <a href="/" class="btn fw-semibold btn-hover-animate" style="border: 2px solid #FF99DC; color: #FF99DC; border-radius: 30px;">
+                Effacer
+              </a>
+
+            </div>
+          </form>
+
+          <!-- Résultats -->
+          {% if filters_applied %}
+          <div class="mt-5">
+            <h5>
+              <span class="badge rounded-pill fs-6 text-white" style="background-color: #3D57A2;">
+                {{ nombre_projets }}
+              </span> résultats trouvés
+            </h5>
+
+            <div class="row mt-4">
+              {% for projet in projets %}
+                <div class="col-12 mb-4">
+                  <div class="p-4 bg-white rounded shadow-sm">
+                    <h5 class="fw-bold mb-2" style="color: #3D57A2;">{{ projet.Nom_appel or 'Appel sans titre' }}</h5>
+                    <p class="text-muted">
+                      {% if projet.thematique %}
+                        {{ projet.thematique | capitalize }}
+                      {% else %}
+                        Thématique non spécifiée
+                      {% endif %}
+                      - {{ projet.Association }}
+                    </p>
+                    <p class="mb-2">
+                      <i class="bi bi-calendar-event"></i>
+                      <strong>Date limite :</strong> {{ projet.Date_limite or 'Non spécifiée' }}
+                    </p>
+                    <div class="mb-3">
+                      <span class="badge bg-secondary me-2">{{ projet.thematique or 'Sans domaine' }}</span>
+                      <span class="badge bg-secondary">{{ projet.region or 'Région inconnue' }}</span>
+                    </div>
+                    {% if projet['Lien_details'] %}
+                      <a href="{{ projet['Lien_details'] }}" target="_blank" class="btn btn-dark mt-2">Plus de détails</a>
+                    {% endif %}
+                  </div>
+                </div>
+              {% else %}
+                <p class="text-center mt-4">Aucun projet trouvé.</p>
+              {% endfor %}
+            </div>
+          </div>
+          {% endif %}
+        </div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-    <footer class="text-center bg-body-tertiary"></footer>
-    <script src="{{ url_for('static', filename='assets/bootstrap/js/bootstrap.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='assets/js/template.js') }}"></script>
-</body>
-</html>
+  <!-- Footer -->
+  <footer class="text-center bg-body-tertiary">
+          <div class="container py-4 py-lg-5">
+              <h1 class="fs-4 text-body mb-4">   <a class="navbar-brand me-4" href="https://jamaity.net/">
+        <img src="{{ url_for('static', filename='assets/images/logo.png') }}" alt="Jamaity Logo" height="40">
+      </a></h1>
+              <ul class="list-inline ">
+                  <li class="list-inline-item me-3"><a class="link-body-emphasis" href="https://jamaity.net/faq">FAQ</a></li>
+                  <li class="list-inline-item me-3"></li>
+                  <li class="list-inline-item me-3"><a class="link-body-emphasis" href="https://jamaity.net/privacy">Politique de confidentialité</a></li>
+                  <li class="list-inline-item me-3"><a class="link-body-emphasis" href="https://jamaity.net/terms">Termes &amp; conditions</a></li>
+                  <li class="list-inline-item"></li>
+              </ul>
+              <p class="text-muted mb-3">Copyright © 2025 Jamaity.net</p>
+              <ul class="list-inline">
+                                <li class="list-inline-item"><a class="link-body-emphasis" href="https://www.facebook.com/jamaity.org"><svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-brand-facebook"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7 10v4h3v7h4v-7h3l1 -4h-4v-2a1 1 0 0 1 1 -1h3v-4h-3a5 5 0 0 0 -5 5v2h-3" /></svg></a></li>
+                  <li class="list-inline-item"><a class="link-body-emphasis" href="https://www.instagram.com/jamaity_association/#"><svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-brand-instagram"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 8a4 4 0 0 1 4 -4h8a4 4 0 0 1 4 4v8a4 4 0 0 1 -4 4h-8a4 4 0 0 1 -4 -4z" /><path d="M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0" /><path d="M16.5 7.5v.01" /></svg></a></li>
+
+                  <li class="list-inline-item"><a class="link-body-emphasis" href="https://www.youtube.com/@JamaityOrg"><svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-brand-youtube"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M2 8a4 4 0 0 1 4 -4h12a4 4 0 0 1 4 4v8a4 4 0 0 1 -4 4h-12a4 4 0 0 1 -4 -4v-8z" /><path d="M10 9l5 3l-5 3z" /></svg></a></li>
+              </ul>
+          </div>
+      </footer>
+  <!-- Scripts -->
+  <script src="{{ url_for('static', filename='assets/bootstrap/js/bootstrap.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='assets/js/template.js') }}"></script>
+
+ <script>
+document.getElementById('filter-form').addEventListener('submit', function(event) {
+  const name = document.getElementById('search_name').value.trim();
+  const regionSelect = document.querySelector('select[name="region"]');
+  const thematiqueSelect = document.querySelector('select[name="thematique"]');
+
+  const region = regionSelect.selectedIndex > 0 ? regionSelect.value : '';
+  const thematique = thematiqueSelect.selectedIndex > 0 ? thematiqueSelect.value : '';
+  const alertBox = document.getElementById('alert-message');
+
+  if (!name && !region && !thematique) {
+    event.preventDefault();
+    alertBox.classList.remove('d-none');
+    alertBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+    setTimeout(() => {
+      alertBox.classList.add('d-none');
+    }, 5000);
+  } else {
+    alertBox.classList.add('d-none');
+  }
+});
+
+const searchInput = document.getElementById('search_name');
+const suggestionBox = document.getElementById('suggestions');
+
+searchInput.addEventListener('input', async function () {
+  const query = this.value.trim();
+
+  if (query.length < 2) {
+    suggestionBox.classList.add('d-none');
+    suggestionBox.innerHTML = '';
+    return;
+  }
+
+  try {
+    const res = await fetch(`/search_nom?q=${encodeURIComponent(query)}`);
+    const data = await res.json();
+
+    suggestionBox.innerHTML = '';
+
+    if (data.length > 0) {
+      suggestionBox.classList.remove('d-none');
+
+      data.forEach(projet => {
+        const li = document.createElement('li');
+        li.className = 'list-group-item list-group-item-action';
+        li.innerHTML = `<strong>${projet.Nom_appel || 'Sans titre'}</strong><br><small>${projet.Association || ''}</small>`;
+        li.addEventListener('click', () => {
+          searchInput.value = projet.Nom_appel || '';
+          suggestionBox.classList.add('d-none');
+          document.getElementById('filter-form').submit(); // optionnel
+        });
+        suggestionBox.appendChild(li);
+      });
+    } else {
+      suggestionBox.classList.add('d-none');
+    }
+  } catch (error) {
+    console.error('Erreur lors de la récupération des suggestions :', error);
+    suggestionBox.classList.add('d-none');
+  }
+});
+
+// Masquer la liste si on clique en dehors
+document.addEventListener('click', function(event) {
+  if (!suggestionBox.contains(event.target) && event.target !== searchInput) {
+    suggestionBox.classList.add('d-none');
+  }
+});
+</script>
+
+
+  </body>
+  </html>
